@@ -71,15 +71,19 @@ http://ionicframework.com/docs/theming/ */
 ion-tab-bar { /* For Tabs*/
   --border: none !important;
   --background: #fcf7ff;
-  --box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.1);
-  --border-radius: 0px;
 }
 
-ion-content {
+ion-content, ion-item, ion-card, ion-list{
     --background: #fcf7ff;
 }
 
-ion-button {
+ion-input, ion-textarea, ion-select, ion-label, ion-searchbar{
+	color: var(--ion-color-dark);
+	background: #f5e8fc;
+	
+}
+
+.gradient-background {
     /* background: #474bff; */
     /* background: -webkit-linear-gradient(126deg, #474bff 0%, #bc48ff 100%); */
     --background: linear-gradient(126deg, #474bff 0%, #bc48ff 100%);
