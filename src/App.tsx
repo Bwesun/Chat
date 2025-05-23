@@ -75,7 +75,7 @@ const App: React.FC = () => (
         </Route>
 
         {/* Routes WITH tabs */}
-        <Route path={["/tab1", "/tab2", "/tab3", "/contacts", "/messages", "/profile"]}>
+        <Route path={["/messages", "/tab2", "/tab3", "/contacts", "/messages", "/profile"]}>
           <IonTabs>
             <IonRouterOutlet>
               <Route exact path="/contacts">
@@ -83,9 +83,6 @@ const App: React.FC = () => (
               </Route>
               <Route exact path="/messages">
                 <MessageList />
-              </Route>
-              <Route exact path="/tab1">
-                <Tab1 />
               </Route>
               <Route exact path="/tab2">
                 <Tab2 />
@@ -95,7 +92,7 @@ const App: React.FC = () => (
               </Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-              <IonTabButton tab="tab1" href="/tab1">
+              <IonTabButton tab="messages" href="/messages">
                 <MessageSquareText />
                 <IonLabel>Chats</IonLabel>
               </IonTabButton>

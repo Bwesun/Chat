@@ -15,7 +15,7 @@ import {
   IonButton,
   IonText,
 } from '@ionic/react';
-import { SearchIcon, PlusIcon } from 'lucide-react'; // Lucide icons remain
+import { SearchIcon, PlusIcon, MessageSquarePlus } from 'lucide-react'; // Lucide icons remain
 
 // Mock data (remains the same)
 interface Chat {
@@ -156,7 +156,7 @@ const MessageList: React.FC = () => {
               '--box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.05)', /* shadow-sm */
             }}
           >
-            {renderLucideIcon(PlusIcon, 18, { marginRight: '0.5rem' /* mr-2 */})}
+            {renderLucideIcon(MessageSquarePlus, 18, { marginRight: '0.5rem' /* mr-2 */})}
             New Chat
           </IonButton>
         </IonToolbar>

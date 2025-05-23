@@ -75,21 +75,21 @@ const Profile: React.FC = () => (
 
       <IonList lines="none" style={{ background: "transparent" }}>
         <IonItem>
-          <IonIcon icon={User} slot="start" />
+          {/* <IonIcon icon={User} slot="start" /> */}
           <IonLabel>
             <strong>Name</strong>
             <div>{user.name}</div>
           </IonLabel>
         </IonItem>
         <IonItem>
-          <IonIcon icon={Mail} slot="start" />
+          {/* <IonIcon icon={Mail} slot="start" /> */}
           <IonLabel>
             <strong>Email</strong>
             <div>{user.email}</div>
           </IonLabel>
         </IonItem>
         <IonItem>
-          <IonIcon icon={Phone} slot="start" />
+          {/* <IonIcon icon={Phone} slot="start" /> */}
           <IonLabel>
             <strong>Phone</strong>
             <div>{user.phone}</div>
