@@ -48,6 +48,8 @@ import { Ellipsis, MessageSquarePlus, MessageSquareText } from 'lucide-react';
 import AuthGate from './components/auth/AuthGate';
 import Welcome from './pages/Welcome';
 import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import ChatPage from './pages/ChatPage';
 
 setupIonicReact();
 
@@ -55,41 +57,51 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <AuthGate />
-      <Route exact path="/welcome" component={Welcome} />
-      <Route exact path="/login" component={Login} />
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/welcome" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <MessageSquareText />
-            <IonLabel>Chats</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <MessageSquarePlus />
-            <IonLabel>New Chat</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <Ellipsis />
-            <IonLabel>More</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
+      <IonRouterOutlet>
+        {/* Routes WITHOUT tabs */}
+        <Route exact path="/welcome" component={Welcome} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/chat" component={ChatPage} />
+        {/* If you have dynamic chat routes: */}
+        {/* <Route path="/chat/:id" component={ChatPage} /> */}
+
+        {/* Default redirect */}
+        <Route exact path="/">
+          <Redirect to="/welcome" />
+        </Route>
+
+        {/* Routes WITH tabs */}
+        <Route path={["/tab1", "/tab2", "/tab3"]}>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route exact path="/tab1">
+                <Tab1 />
+              </Route>
+              <Route exact path="/tab2">
+                <Tab2 />
+              </Route>
+              <Route path="/tab3">
+                <Tab3 />
+              </Route>
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="tab1" href="/tab1">
+                <MessageSquareText />
+                <IonLabel>Chats</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab2" href="/tab2">
+                <MessageSquarePlus />
+                <IonLabel>New Chat</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab3" href="/tab3">
+                <Ellipsis />
+                <IonLabel>More</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </Route>
+      </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
 );

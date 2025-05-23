@@ -11,6 +11,7 @@ const Welcome: React.FC = () => {
       <IonContent
         fullscreen
         className="ion-padding"
+        scrollY={false}
       >
         <div
           style={{
@@ -20,10 +21,11 @@ const Welcome: React.FC = () => {
             padding: 40,
             width: "100%",
             textAlign: "center",
-            minHeight: '80vh',
-            gap: '2rem'
+            gap: '3rem',
+            minHeight: '80vh'
           }}
         >
+            
           <div style={{ marginBottom: 24 }}>
             <MessageSquareText size={48} color="#6366f1" />
             <h1

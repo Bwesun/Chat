@@ -69,7 +69,7 @@ http://ionicframework.com/docs/theming/ */
 }
 
 ion-tab-bar { /* For Tabs*/
-  --border: none !important;
+  --border: 1px solid var(--ion-color-tertiary-tint);
   --background: #fcf7ff;
 }
 
@@ -77,21 +77,32 @@ ion-content, ion-item, ion-card, ion-list{
     --background: #fcf7ff;
 }
 
-ion-input, ion-textarea, ion-select, ion-label, ion-searchbar{
-	color: var(--ion-color-dark);
-	background: #f5e8fc;
-	
+ion-input, ion-textarea, ion-select, ion-searchbar{
+	background: var(--ion-color-light);
+	color: var(--ion-color-dark) !important;
+	border-radius: 1rem;
+	padding: 0.5rem;
+	/* border-bottom: 1px solid var(--ion-color-tertiary-tint); */
+}
+
+.primary-color{
+	color: var(--ion-color-primary);
 }
 
 .gradient-background {
-    /* background: #474bff; */
-    /* background: -webkit-linear-gradient(126deg, #474bff 0%, #bc48ff 100%); */
+    /* background:#9afaa7; */
+    /* background: -webkit-linear-gradient(126deg, #474bff 0%,#2c0244 100%); */
     --background: linear-gradient(126deg, #474bff 0%, #bc48ff 100%);
 }
 
 ion-toolbar {
     color: --ion-color-light;
-    --background: linear-gradient(126deg, #474bff 0%, #bc48ff 100%);
+    --background: var(--ion-color-primary-tint);
+}
+
+ion-footer ion-toolbar{
+    color: --ion-color-light;
+    --background: #fcf7ff;
 }
 
 

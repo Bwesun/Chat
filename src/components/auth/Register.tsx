@@ -5,21 +5,20 @@ import {
   IonInput,
   IonButton,
   IonItem,
-  IonLabel,
-  IonIcon,
   IonText,
-  IonLoading,
   IonHeader,
   IonToolbar,
   IonTitle,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebaseConfig"; // Adjust path if needed
+import { Mail, Lock, User, Eye, EyeOff, UserPlus } from "lucide-react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig"; // Adjust path if needed
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const history = useHistory();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -27,6 +26,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const validate = () => {
+    if (!name) return "Name is required";
     if (!email) return "Email is required";
     if (!/\S+@\S+\.\S+/.test(email)) return "Invalid email address";
     if (!password) return "Password is required";
@@ -44,15 +44,24 @@ const Login: React.FC = () => {
     }
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      history.push("/welcome");
+      // Register user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = userCredential.user;
+
+      // Create user document in Firestore
+      await setDoc(doc(db, "users", uid), {
+        uid,
+        name,
+        email,
+        createdAt: new Date().toISOString(),
+      });
+
+      history.push("/chat");
     } catch (err: any) {
       setError(
-        err.code === "auth/user-not-found"
-          ? "No user found with this email."
-          : err.code === "auth/wrong-password"
-          ? "Incorrect password."
-          : "Login failed. Please try again."
+        err.code === "auth/email-already-in-use"
+          ? "Email already in use."
+          : "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -61,26 +70,39 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen className="ion-padding" style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center", 
-        minHeight: '60vh',
-        gap: '2rem' 
+      <IonContent fullscreen className="ion-padding" style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
       }}>
         <form
           onSubmit={handleSubmit}
         >
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <LogIn color="#6366f1" size={40} style={{ marginBottom: 8 }} />
-            <h2 style={{ color: "#3730a3", fontWeight: 700, fontSize: 24 }}>Welcome Back</h2>
+            <UserPlus color="#6366f1" size={40} style={{ marginBottom: 8 }} />
+            <h2 style={{ color: "#3730a3", fontWeight: 700, fontSize: 24 }}>Create Account</h2>
           </div>
           {error && (
             <IonText color="danger">
               <div style={{ marginBottom: 12, textAlign: "center" }}>{error}</div>
             </IonText>
           )}
-          <IonItem color={"light"}  className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
+          <IonItem color={"light"}className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
+            <span slot="start" style={{ marginRight: 8 }}>
+              <User size={18} className="primary-color" />
+            </span>
+            <IonInput
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onIonChange={e => setName(e.detail.value!)}
+              disabled={loading}
+              required
+              autoFocus
+            />
+          </IonItem>
+          <IonItem color={"light"} className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
             <span slot="start" style={{ marginRight: 8 }}>
               <Mail size={18} className="primary-color" />
             </span>
@@ -91,7 +113,6 @@ const Login: React.FC = () => {
               onIonChange={e => setEmail(e.detail.value!)}
               disabled={loading}
               required
-              autoFocus
             />
           </IonItem>
           <IonItem color={"light"} className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
@@ -124,14 +145,8 @@ const Login: React.FC = () => {
             disabled={loading}
             style={{ marginTop: 8, fontWeight: 600, fontSize: 16 }}
           >
-            {loading ? (
-              <IonLoading isOpen={loading} message="Signing in..." spinner="crescent" />
-            ) : (
-              <>
-                <LogIn size={18} style={{ marginRight: 8 }} />
-                Sign In
-              </>
-            )}
+            <UserPlus size={18} style={{ marginRight: 8 }} />
+            {loading ? "Creating..." : "Create Account"}
           </IonButton>
         </form>
       </IonContent>
@@ -139,4 +154,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;
