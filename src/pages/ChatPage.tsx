@@ -129,7 +129,7 @@ const ChatPage: React.FC = () => {
         <IonToolbar>
           <IonButtons slot="start">
             {/* Replicates Link to /home, hidden on md and up */}
-            <IonButton fill='clear' routerLink="/home" className="ion-hide-md-up">
+            <IonButton fill='clear' className="ion-hide-md-up" onClick={() => history.back()}>
               <IonIcon icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>

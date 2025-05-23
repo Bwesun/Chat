@@ -45,7 +45,7 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      history.push("/welcome");
+      history.push("/messages");
     } catch (err: any) {
       setError(
         err.code === "auth/user-not-found"

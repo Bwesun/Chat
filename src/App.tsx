@@ -44,12 +44,15 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { Ellipsis, MessageSquarePlus, MessageSquareText } from 'lucide-react';
+import { Ellipsis, MessageSquarePlus, MessageSquareText, User } from 'lucide-react';
 import AuthGate from './components/auth/AuthGate';
 import Welcome from './pages/Welcome';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ChatPage from './pages/ChatPage';
+import Contacts from './pages/Contacts';
+import MessageList from './pages/MessageList';
+import Profile from './pages/Tab3';
 
 setupIonicReact();
 
@@ -62,9 +65,9 @@ const App: React.FC = () => (
         <Route exact path="/welcome" component={Welcome} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
-        <Route exact path="/chat" component={ChatPage} />
+        {/* <Route exact path="/chat" component={ChatPage} /> */}
         {/* If you have dynamic chat routes: */}
-        {/* <Route path="/chat/:id" component={ChatPage} /> */}
+        <Route path="/chat/:id" component={ChatPage} />
 
         {/* Default redirect */}
         <Route exact path="/">
@@ -72,17 +75,23 @@ const App: React.FC = () => (
         </Route>
 
         {/* Routes WITH tabs */}
-        <Route path={["/tab1", "/tab2", "/tab3"]}>
+        <Route path={["/tab1", "/tab2", "/tab3", "/contacts", "/messages", "/profile"]}>
           <IonTabs>
             <IonRouterOutlet>
+              <Route exact path="/contacts">
+                <Contacts />
+              </Route>
+              <Route exact path="/messages">
+                <MessageList />
+              </Route>
               <Route exact path="/tab1">
                 <Tab1 />
               </Route>
               <Route exact path="/tab2">
                 <Tab2 />
               </Route>
-              <Route path="/tab3">
-                <Tab3 />
+              <Route path="/profile">
+                <Profile />
               </Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
@@ -94,9 +103,9 @@ const App: React.FC = () => (
                 <MessageSquarePlus />
                 <IonLabel>New Chat</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="tab3" href="/tab3">
-                <Ellipsis />
-                <IonLabel>More</IonLabel>
+              <IonTabButton tab="profile" href="/profile">
+                <User />
+                <IonLabel>Profile</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
