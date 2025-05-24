@@ -14,8 +14,8 @@ import {
   IonText,
   IonButtons,
 } from "@ionic/react";
-import { LogOut, Edit, User, Mail, Phone, Settings } from "lucide-react";
-import { arrowBackOutline } from "ionicons/icons";
+import { LogOut, Edit, User, Mail, Phone, Settings, UserIcon } from "lucide-react";
+import { arrowBackOutline, callOutline, filmOutline, mailOutline, personOutline } from "ionicons/icons";
 
 const user = {
   name: "Jane Doe",
@@ -73,31 +73,31 @@ const Profile: React.FC = () => (
         </IonButton>
       </div>
 
-      <IonList lines="none" style={{ background: "transparent" }}>
+      <IonList lines="none" style={{ background: "transparent"}}>
         <IonItem>
-          {/* <IonIcon icon={User} slot="start" /> */}
-          <IonLabel>
+          <IonIcon icon={personOutline} slot="start" color="dark" />
+          <IonLabel color={"dark"}>
             <strong>Name</strong>
             <div>{user.name}</div>
           </IonLabel>
         </IonItem>
         <IonItem>
-          {/* <IonIcon icon={Mail} slot="start" /> */}
-          <IonLabel>
+          <IonIcon color="dark" icon={mailOutline} slot="start" />
+          <IonLabel color={"dark"}>
             <strong>Email</strong>
             <div>{user.email}</div>
           </IonLabel>
         </IonItem>
         <IonItem>
-          {/* <IonIcon icon={Phone} slot="start" /> */}
-          <IonLabel>
+          <IonIcon color={"dark"} icon={callOutline} slot="start" />
+          <IonLabel color={"dark"}>
             <strong>Phone</strong>
             <div>{user.phone}</div>
           </IonLabel>
         </IonItem>
       </IonList>
 
-      <div style={{
+      {/* <div style={{
         display: "flex",
         justifyContent: "space-around",
         margin: "32px 0 24px 0",
@@ -118,7 +118,7 @@ const Profile: React.FC = () => (
           <div style={{ fontWeight: 700, fontSize: 18, color: "#2563EB" }}>{user.stats.groups}</div>
           <IonText color="medium" style={{ fontSize: 14 }}>Groups</IonText>
         </div>
-      </div>
+      </div> */}
 
       <IonButton
         expand="block"
