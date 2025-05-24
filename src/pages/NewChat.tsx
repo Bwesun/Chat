@@ -17,9 +17,10 @@ import {
   IonIcon,
   IonFab,
   IonFabButton,
+  IonButtons,
 } from '@ionic/react';
 import { SearchIcon, PlusIcon, MessageSquarePlus, CheckIcon, XIcon } from 'lucide-react'; // Lucide icons remain
-import { addOutline, arrowForwardOutline, chevronForwardOutline, eyeOutline } from 'ionicons/icons';
+import { addOutline, arrowBackOutline, arrowForwardOutline, chevronForwardOutline } from 'ionicons/icons';
 
 // Mock data (remains the same)
 interface Contact {
@@ -39,7 +40,7 @@ const mockContacts: Contact[] = [
 ];
 
 
-const Contacts: React.FC = () => {
+const NewChat: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredContacts = mockContacts;
@@ -54,7 +55,13 @@ const Contacts: React.FC = () => {
     <IonPage>
       <IonHeader translucent={true} className="ion-no-border">
         <IonToolbar color={'light'}>
-          <IonTitle color={'primary'}>Contacts</IonTitle>
+          <IonTitle color={'primary'}>Start New Chat</IonTitle>
+          <IonButtons slot="start">
+                      {/* Replicates Link to /home, hidden on md and up */}
+                      <IonButton fill='clear' className="ion-hide-md-up" onClick={() => history.back()}>
+                        <IonIcon color='primary' icon={arrowBackOutline} slot='icon-only' />
+                      </IonButton>
+                    </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -73,7 +80,7 @@ const Contacts: React.FC = () => {
                   </IonSearchbar>
 
           {filteredContacts.map((contact) => (
-            <IonItem routerLink={`/viewprofile/${contact.id}`} className='ion-no-border' lines='none' key={contact.id} button={true} detail={false} style={{ '--padding-start': '16px', '--inner-padding-end': '16px' }}>
+            <IonItem routerLink={`/chat/${contact.id}`} className='ion-no-border' lines='none' key={contact.id} button={true} detail={false} style={{ '--padding-start': '16px', '--inner-padding-end': '16px' }}>
               <IonAvatar slot="start" style={{ width: '48px', height: '48px' /* h-12 w-12 */ }}>
                 <img src={contact.avatar} alt={`${contact.name}'s avatar`} style={{ objectFit: 'cover', borderRadius: '50%'}} />
               </IonAvatar>
@@ -89,11 +96,11 @@ const Contacts: React.FC = () => {
                   </div>
                   
                     <IonButton
-                      routerLink={`/viewprofile/${contact.id}`}
+                      routerLink={`/chat/${contact.id}`}
                       size="small"
                       shape='round'
                       color={'primary'}
-                      fill="clear" // or "outline"
+                      fill="outline" // or "outline"
                     >
                       <IonIcon icon={chevronForwardOutline} slot='icon-only' />
                     </IonButton>
@@ -115,4 +122,4 @@ const Contacts: React.FC = () => {
   );
 };
 
-export default Contacts;
+export default NewChat;

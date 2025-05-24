@@ -10,10 +10,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import { StatusBar } from '@capacitor/status-bar';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -44,7 +41,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { Ellipsis, MessageSquarePlus, MessageSquareText, User } from 'lucide-react';
+import { Ellipsis, MessageSquarePlus, MessageSquareText, User, Users } from 'lucide-react';
 import AuthGate from './components/auth/AuthGate';
 import Welcome from './pages/Welcome';
 import Login from './components/auth/Login';
@@ -52,11 +49,28 @@ import Register from './components/auth/Register';
 import ChatPage from './pages/ChatPage';
 import Contacts from './pages/Contacts';
 import MessageList from './pages/MessageList';
-import Profile from './pages/Tab3';
+import Profile from './pages/Profile';
+import NewChat from './pages/NewChat';
+import ViewProfile from './pages/ViewProfile';
+import { useEffect } from 'react';
 
 setupIonicReact();
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+  useEffect(() => {
+    const setStatusBar = async () => {
+      try {
+        await StatusBar.setBackgroundColor({ color: '#6200a8' }); // Your color here
+        await StatusBar.setOverlaysWebView({ overlay: false }); // Avoid overlapping
+      } catch (error) {
+        console.error('Error setting status bar:', error);
+      }
+    };
+
+    setStatusBar();
+  }, []);
+
+  return (
   <IonApp>
     <IonReactRouter>
       <AuthGate />
@@ -75,7 +89,7 @@ const App: React.FC = () => (
         </Route>
 
         {/* Routes WITH tabs */}
-        <Route path={["/messages", "/tab2", "/tab3", "/contacts", "/messages", "/profile"]}>
+        <Route path={["/newchat", "/contacts", "/messages", "/profile", "/viewprofile/:id"]}>
           <IonTabs>
             <IonRouterOutlet>
               <Route exact path="/contacts">
@@ -84,11 +98,14 @@ const App: React.FC = () => (
               <Route exact path="/messages">
                 <MessageList />
               </Route>
-              <Route exact path="/tab2">
-                <Tab2 />
+              <Route exact path="/newchat">
+                <NewChat />
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route exact path="/viewprofile/:id">
+                <ViewProfile />
               </Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
@@ -96,9 +113,9 @@ const App: React.FC = () => (
                 <MessageSquareText />
                 <IonLabel>Chats</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="tab2" href="/tab2">
-                <MessageSquarePlus />
-                <IonLabel>New Chat</IonLabel>
+              <IonTabButton tab="contacts" href="/contacts">
+                <Users />
+                <IonLabel>Contacts</IonLabel>
               </IonTabButton>
               <IonTabButton tab="profile" href="/profile">
                 <User />
@@ -110,6 +127,6 @@ const App: React.FC = () => (
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
-);
+)};
 
 export default App;

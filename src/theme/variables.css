@@ -77,7 +77,7 @@ ion-content, ion-item, ion-card, ion-list{
     --background: #fcf7ff;
 }
 
-ion-input, ion-textarea, ion-select, ion-search-bar, .search-bar{
+ion-input, ion-textarea, ion-select, ion-search-bar{
 	background: var(--ion-color-light);
 	color: var(--ion-color-dark) !important;
 	border-radius: 1rem;
@@ -100,8 +100,6 @@ ion-toolbar {
     --background: var(--ion-color-primary);
 }
 
-ion-footer ion-toolbar{
-}
 
 
 /* FOR USER PROFILE MODAL */

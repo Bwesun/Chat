@@ -14,8 +14,12 @@ import {
   IonFooter,
   IonButton,
   IonText,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from '@ionic/react';
 import { SearchIcon, PlusIcon, MessageSquarePlus } from 'lucide-react'; // Lucide icons remain
+import { addOutline } from 'ionicons/icons';
 
 // Mock data (remains the same)
 interface Chat {
@@ -51,17 +55,23 @@ const MessageList: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle color={'light'}>Messages</IonTitle>
+      <IonHeader translucent={true} className="ion-no-border">
+        <IonToolbar color={'light'}>
+          <IonTitle color={'primary'}>Messages</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
         <IonSearchbar className='search-bar'
             value={searchQuery}
+            color={'primary'}
             onIonChange={(e) => setSearchQuery(e.detail.value!)}
             placeholder="Search chats" 
+            style={{
+              '--placeholder-color': '--ion-color-light', 
+              '--box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // shadow-sm
+              '--border-radius': '5rem', // rounded-lg
+            }}
           >
           </IonSearchbar>
         
@@ -71,6 +81,7 @@ const MessageList: React.FC = () => {
               routerLink={`/chat/${chat.id}`}
               button={true}
               detail={false}
+              lines='none'
               style={{ '--inner-padding-end': '16px' }}
             >
               <div slot="start" style={{ position: 'relative' }}>
@@ -145,22 +156,13 @@ const MessageList: React.FC = () => {
               </IonLabel>
             </IonItem>
           )}
-      </IonContent>
 
-      <IonFooter>
-        <IonToolbar className="">
-          <IonButton color={'primary'}
-            routerLink="/contacts"
-            expand="block"
-            style={{
-              '--box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.05)', /* shadow-sm */
-            }}
-          >
-            {renderLucideIcon(MessageSquarePlus, 18, { marginRight: '0.5rem' /* mr-2 */})}
-            New Chat
-          </IonButton>
-        </IonToolbar>
-      </IonFooter>
+            <IonFab slot='fixed' vertical='bottom' horizontal='end'>
+                <IonFabButton routerLink='/newchat'>
+                    <MessageSquarePlus size={24} color={'white'} />
+                </IonFabButton>
+            </IonFab>
+      </IonContent>
     </IonPage>
   );
 };

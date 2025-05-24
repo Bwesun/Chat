@@ -36,9 +36,8 @@ const Profile: React.FC = () => (
       <IonToolbar>
           <IonButtons slot="start">
             <IonButton fill='clear' 
-              onClick={() => window.history.back()}
               className="ion-hide-md-up">
-              <IonIcon icon={arrowBackOutline} slot='icon-only' />
+              <IonIcon color="light" icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>
           <IonTitle color={"light"} style={{ fontWeight: 500 }}>Profile</IonTitle>

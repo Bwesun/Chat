@@ -150,7 +150,7 @@ const ChatPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent ref={contentRef} scrollEvents={true} style={{ '--background': '#F9FAFB' /* bg-gray-50 */ }} className="ion-padding-horizontal">
+      <IonContent ref={contentRef} scrollEvents={true} style={{ '--background': 'var(--ion-color-light)' /* bg-gray-50 */ }} className="ion-padding-horizontal">
         {Object.entries(groupedMessages).map(([date, dateMessages]) => (
           <div key={date} style={{ marginBottom: '1rem' /* Approximate space-y-4 */}}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
@@ -189,7 +189,7 @@ const ChatPage: React.FC = () => {
                       style={{
                         padding: '0.5rem 1rem', /* px-4 py-2 */
                         borderRadius: '0.5rem', /* rounded-lg */
-                        backgroundColor: isCurrentUser ? '#2563EB' : '#E5E7EB', /* blue-600 : gray-200 */
+                        backgroundColor: isCurrentUser ? '#721ab1' : '#E5E7EB', /* blue-600 : gray-200 */
                         color: isCurrentUser ? 'white' : '#1F2937', /* white : gray-800 */
                         borderBottomRightRadius: isCurrentUser ? '0' : undefined,
                         borderBottomLeftRadius: !isCurrentUser ? '0' : undefined,
@@ -253,8 +253,11 @@ const ChatPage: React.FC = () => {
         )}
       </IonContent>
 
-      <IonFooter>
-        <IonToolbar>
+      <IonFooter className='ion-no-border'>
+        <IonToolbar color={'light'} className='ion-no-border'
+        style={{
+          maxHeight: '100vh', // Limit footer height
+        }}>
           <form onSubmit={handleSendMessage} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' /* p-2 approx */}}>
             <IonInput
               type="text"
@@ -262,25 +265,21 @@ const ChatPage: React.FC = () => {
               value={message}
               onIonChange={(e) => setMessage(e.detail.value!)}
               style={{
-                flex: 1,
-                margin: '0 0.5rem', /* mx-2 */
-                '--border-radius': '9999px', /* rounded-full */
-                '--border-color': '#D1D5DB', /* border-gray-300 */
                 '--padding-start': '1rem', /* px-4 (start) */
                 '--padding-end': '1rem', /* px-4 (end) */
-                '--background': '#fff',
+                backgroundColor: '#e9d1fa', /* bg-gray-100 */
                  minHeight: '40px', // Ensure consistent height
+                 maxHeight: '100vh', // Limit height for long messages
               }}
               mode="md" // Use md mode for more standard input look, or remove for default
-              fill="outline" // Or "solid"
             />
               <IonButton
                 type="submit"
                 shape="round"
-                color="secondary"
+                color="primary"
                 disabled={!message.trim()}
               >
-                <IonIcon color='light' icon={sendOutline} slot='icon-only' className='ion-paddin' />
+                <IonIcon color='light' icon={sendOutline} slot='icon-only' />
               </IonButton>
           </form>
         </IonToolbar>
