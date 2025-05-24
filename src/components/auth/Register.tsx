@@ -56,7 +56,7 @@ const Register: React.FC = () => {
         createdAt: new Date().toISOString(),
       });
 
-      history.push("/chat");
+      history.push("/messages");
     } catch (err: any) {
       setError(
         err.code === "auth/email-already-in-use"

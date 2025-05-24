@@ -83,7 +83,7 @@ const App: React.FC = () => {
         {/* If you have dynamic chat routes: */}
         <Route path="/chat/:id" component={ChatPage} />
 
-        {/* Default redirect */}
+        {/* Default redirect */} 
         <Route exact path="/">
           <Redirect to="/welcome" />
         </Route>
