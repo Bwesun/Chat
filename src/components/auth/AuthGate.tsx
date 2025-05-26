@@ -15,12 +15,14 @@ const AuthGate: React.FC = () => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if(!loading){
         if (user) {
-          if(locationPath === '/welcome' || '/login' || '/signup'){
-            history.push('/tabs');
+          if(locationPath === '/welcome' || '/login' || '/register'){
+            // alert('You are already logged in!');
+            // console.log(user);
+            history.push('/messages');
           }
         }  else {
           history.push('/welcome');
-        }
+        } 
       }
     });
 

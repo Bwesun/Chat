@@ -6,9 +6,6 @@ import {
   IonButton,
   IonItem,
   IonText,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { Mail, Lock, User, Eye, EyeOff, UserPlus } from "lucide-react";
@@ -55,7 +52,7 @@ const Register: React.FC = () => {
         email,
         createdAt: new Date().toISOString(),
       });
-
+      console.log(uid)
       history.push("/messages");
     } catch (err: any) {
       setError(
