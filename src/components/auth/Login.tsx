@@ -12,11 +12,13 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
+  IonButtons,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig"; // Adjust path if needed
+import { arrowBackOutline } from "ionicons/icons";
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -61,6 +63,16 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader className="ion-no-border">
+                  <IonToolbar color={'light'}>
+                      <IonButtons slot="start">
+                        <IonButton onClick={() => history.goBack()} fill='clear' 
+                          className="ion-hide-md-up">
+                          <IonIcon color="primary" icon={arrowBackOutline} slot='icon-only' />
+                        </IonButton>
+                      </IonButtons>
+                  </IonToolbar>
+                </IonHeader>
       <IonContent fullscreen className="ion-padding" style={{ 
         display: "flex", 
         alignItems: "center", 
@@ -133,6 +145,15 @@ const Login: React.FC = () => {
               </>
             )}
           </IonButton>
+
+          <div style={{ textAlign: "center", marginTop: 24 }}>
+            <IonText color={"dark"}>
+              Don't have an account?{" "}
+              <Link color={"secondary"} to="/register" style={{ padding: 0, textDecoration: 'none' }}>
+                Register
+              </Link>
+            </IonText>
+          </div>
         </form>
       </IonContent>
     </IonPage>
