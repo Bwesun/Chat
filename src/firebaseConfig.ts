@@ -22,8 +22,6 @@ const auth = getAuth()
 
 // Collection reference
 const colRef = collection(db, "users");
-const transRef = collection(db, "messages");
-const orgRef = collection(db, "organizations");
-const payRef = collection(db, "payments");
+const msgRef = collection(db, "messages");
 
-export { appinit, auth, db, colRef, transRef, payRef, orgRef };
+export { appinit, auth, db, colRef, msgRef};
