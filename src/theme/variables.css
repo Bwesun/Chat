@@ -109,7 +109,30 @@ ion-toolbar {
   --max-width: 28rem; /* max-w-md */
   --width: calc(100% - 2rem); /* w-full with p-4 equivalent for small screens */
   --height: auto; /* Let content determine height */
-
-  /* Centering is default for IonModal on desktop.
-     On mobile, it might take full width/height or be a sheet based on props. */
 }
+
+/* FOR ALERTS */
+ion-alert.custom-alert {
+	--color: var(--ion-color-dark);
+	--background: #fcf7ff;
+  }
+
+.custom-alert-white-bg {
+  --background: #fcf7ff; /* White background */
+  --color: #000000; /* Dark text */
+}
+
+.custom-alert-button-primary {
+  --background: var(--ion-color-primary); /* Primary color for the button */
+  --color: #fcf7ff; /* White text */
+}
+
+.custom-alert-button-danger {
+  --background: var(--ion-color-danger); /* Danger color for the button */
+  --color: #fcf7ff; /* White text */
+}
+
+button.alert-button.alert-button-confirm {
+	background-color: var(--ion-color-secondary);
+	color: var(--ion-color-light);
+  }
