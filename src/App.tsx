@@ -53,6 +53,9 @@ import Profile from './pages/Profile';
 import NewChat from './pages/NewChat';
 import ViewProfile from './pages/ViewProfile';
 import { useEffect } from 'react';
+import Logout from './components/auth/Logout';
+import NetworkCheck from './components/NetworkCheck';
+import { AuthProvider } from './contexts/AuthContext';
 
 setupIonicReact();
 
@@ -71,14 +74,18 @@ const App: React.FC = () => {
   }, []);
 
   return (
+    <AuthProvider>
+
   <IonApp>
     <IonReactRouter>
       <AuthGate />
+      <NetworkCheck />
       <IonRouterOutlet>
         {/* Routes WITHOUT tabs */}
         <Route exact path="/welcome" component={Welcome} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/logout" component={Logout} />
         {/* <Route exact path="/chat" component={ChatPage} /> */}
         {/* If you have dynamic chat routes: */}
         <Route path="/chat/:id" component={ChatPage} />
@@ -127,6 +134,7 @@ const App: React.FC = () => {
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
+    </AuthProvider>
 )};
 
 export default App;

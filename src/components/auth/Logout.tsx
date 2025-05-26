@@ -14,16 +14,8 @@ const Logout: React.FC = () => {
     const handleLogout = async () => {
       try {
         await signOut(auth);
-
-        present({
-          message: "Signed out successfully!",
-          duration: 1500,
-          color: "success",
-        });
-
-        setTimeout(() => {
+        console.log(auth);
           history.replace("/welcome"); // Safe redirect
-        }, 1500);
       } catch (error) {
         console.error("Logout Error:", error);
         present({

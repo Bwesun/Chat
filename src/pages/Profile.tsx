@@ -136,6 +136,7 @@ const Profile: React.FC = () => (
         expand="block"
         color="danger"
         fill="outline"
+        routerLink="/logout"
         style={{
           borderRadius: 12,
           fontWeight: 600,
