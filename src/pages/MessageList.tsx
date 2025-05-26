@@ -20,6 +20,7 @@ import {
 } from '@ionic/react';
 import { SearchIcon, PlusIcon, MessageSquarePlus } from 'lucide-react'; // Lucide icons remain
 import { addOutline } from 'ionicons/icons';
+import { useAuth } from '../contexts/AuthContext';
 
 // Mock data (remains the same)
 interface Chat {
@@ -42,16 +43,18 @@ const mockChats: Chat[] = [
 
 
 const MessageList: React.FC = () => {
+    const {user, loading} = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredChats = mockChats.filter((chat) =>
     chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  // console.log(user?.uid, loading);
 
   const renderLucideIcon = (IconComponent: React.ElementType, size: number, style?: React.CSSProperties, className?: string) => {
     return <IconComponent size={size} style={style} className={className} />;
   };
-
+  
 
   return (
     <IonPage>
