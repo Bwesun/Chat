@@ -22,7 +22,7 @@ const auth = getAuth()
 
 // Collection reference
 const colRef = collection(db, "users");
-const transRef = collection(db, "transactions");
+const transRef = collection(db, "messages");
 const orgRef = collection(db, "organizations");
 const payRef = collection(db, "payments");
 

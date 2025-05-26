@@ -83,10 +83,13 @@ const App: React.FC = () => {
       <IonRouterOutlet>
         {/* Routes WITHOUT tabs */}
         <Route exact path="/welcome" component={Welcome} />
+
         <Route exact path="/register" component={Register} />
+
         <Route exact path="/login" component={Login} />
+
         <Route exact path="/logout" component={Logout} />
-        {/* <Route exact path="/chat" component={ChatPage} /> */}
+        <Route exact path="/newchat" component={NewChat}/>
         {/* If you have dynamic chat routes: */}
         <Route path="/chat/:id" component={ChatPage} />
 
@@ -96,7 +99,7 @@ const App: React.FC = () => {
         </Route>
 
         {/* Routes WITH tabs */}
-        <Route path={["/newchat", "/contacts", "/messages", "/profile", "/viewprofile/:id"]}>
+        <Route path={["/contacts", "/messages", "/profile", "/viewprofile/:id"]}>
           <IonTabs>
             <IonRouterOutlet>
               <Route exact path="/contacts">
@@ -104,9 +107,6 @@ const App: React.FC = () => {
               </Route>
               <Route exact path="/messages">
                 <MessageList />
-              </Route>
-              <Route exact path="/newchat">
-                <NewChat />
               </Route>
               <Route path="/profile">
                 <Profile />
