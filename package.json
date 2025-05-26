@@ -19,6 +19,7 @@
     "@capacitor/core": "latest",
     "@capacitor/haptics": "latest",
     "@capacitor/keyboard": "latest",
+    "@capacitor/network": "^7.0.1",
     "@capacitor/status-bar": "latest",
     "@ionic/react": "^8.5.0",
     "@ionic/react-router": "^8.5.0",
