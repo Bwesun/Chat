@@ -15,7 +15,8 @@ import { auth, db } from "../../firebaseConfig"; // Adjust path if needed
 
 const Register: React.FC = () => {
   const history = useHistory();
-  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [firstname, setFirstname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -23,7 +24,8 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const validate = () => {
-    if (!name) return "Name is required";
+    if (!surname) return "Surname is required";
+    if (!firstname) return "Firstname is required";
     if (!email) return "Email is required";
     if (!/\S+@\S+\.\S+/.test(email)) return "Invalid email address";
     if (!password) return "Password is required";
@@ -48,7 +50,8 @@ const Register: React.FC = () => {
       // Create user document in Firestore
       await setDoc(doc(db, "users", uid), {
         uid,
-        name,
+        surname,
+        firstname,
         email,
         createdAt: new Date().toISOString(),
       });
@@ -85,18 +88,31 @@ const Register: React.FC = () => {
               <div style={{ marginBottom: 12, textAlign: "center" }}>{error}</div>
             </IonText>
           )}
-          <IonItem color={"light"}className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
+          <IonItem color={"light"} className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
             <span slot="start" style={{ marginRight: 8 }}>
               <User size={18} className="primary-color" />
             </span>
             <IonInput
               type="text"
-              placeholder="Full Name"
-              value={name}
-              onIonChange={e => setName(e.detail.value!)}
+              placeholder="Surname"
+              value={surname}
+              onIonChange={e => setSurname(e.detail.value!)}
               disabled={loading}
               required
               autoFocus
+            />
+          </IonItem>
+          <IonItem color={"light"} className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
+            <span slot="start" style={{ marginRight: 8 }}>
+              <User size={18} className="primary-color" />
+            </span>
+            <IonInput
+              type="text"
+              placeholder="Firstname"
+              value={firstname}
+              onIonChange={e => setFirstname(e.detail.value!)}
+              disabled={loading}
+              required
             />
           </IonItem>
           <IonItem color={"light"} className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
