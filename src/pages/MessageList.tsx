@@ -214,7 +214,8 @@ const MessageList: React.FC = () => {
         ) : filteredChats.length === 0 ? (
           <IonItem lines="none">
             <IonLabel className="ion-text-center" style={{ color: '#6B7280', marginTop: '20px', marginBottom: '20px' }}>
-              No chats found.
+              
+              No chats found. Click <MessageSquarePlus size={24} color={'#6B7280'} style={{ marginBottom: '8px' }} /> to start a new conversation!
             </IonLabel>
           </IonItem>
         ) : (
