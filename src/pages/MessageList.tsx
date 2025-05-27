@@ -207,7 +207,7 @@ const MessageList: React.FC = () => {
         {loadingChats ? (
           <div style={{ textAlign: 'center', marginTop: 40 }}>
             <IonText color="medium" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-              <IonSpinner color={'primary'} name="dots" style={{ width: 24, height: 24, marginRight: 8 }}></IonSpinner>
+              <IonSpinner color={'primary'} name="crescent" style={{ width: 24, height: 24, marginRight: 8 }}></IonSpinner>
               Loading chats...
             </IonText>
           </div>

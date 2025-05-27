@@ -137,7 +137,7 @@ const Login: React.FC = () => {
             style={{ marginTop: 8, fontWeight: 600, fontSize: 16 }}
           >
             {loading ? (
-              <IonLoading isOpen={loading} message="Signing in..." spinner="crescent" />
+              <IonLoading color="light" isOpen={loading} message="Signing in..." spinner="crescent" />
             ) : (
               <>
                 <LogIn size={18} style={{ marginRight: 8 }} />

@@ -49,9 +49,9 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          <div style={{ textAlign: "center", marginTop: 40 }}>
+          <div style={{ textAlign: "center", marginTop: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <IonText color="medium">
-              <IonSpinner name="dots" style={{ width: 24, height: 24, marginRight: 8 }}></IonSpinner>
+              <IonSpinner color={'primary'} name="crescent" style={{ width: 24, height: 24, marginRight: 8 }}></IonSpinner>
               Loading profile...
             </IonText>
           </div>

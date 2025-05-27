@@ -84,7 +84,7 @@ const Contacts: React.FC = () => {
 
         {loading ? (
           <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <IonSpinner name="dots" style={{ width: 24, height: 24, marginRight: 8 }} />
+            <IonSpinner color={'primary'} name="crescent" style={{ width: 24, height: 24, marginRight: 8 }} />
             <IonText color="medium">Loading contacts...</IonText>
           </div>
         ) : filteredContacts.length === 0 ? (

@@ -219,7 +219,7 @@ const ChatPage: React.FC = () => {
                   ? chatUser.firstname + ' ' + chatUser.surname
                   : (
                     <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <IonSpinner name="dots" style={{ width: 20, height: 20 }} />
+                      <IonSpinner color={'primary'} name="dots" style={{ width: 20, height: 20 }} />
                       Loading...
                     </span>
                   )
