@@ -213,7 +213,7 @@ const MessageList: React.FC = () => {
           </div>
         ) : filteredChats.length === 0 ? (
           <IonItem lines="none">
-            <IonLabel className="ion-text-center" style={{ color: '#6B7280', marginTop: '20px', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <IonLabel className="ion-text-center" style={{ color: '#6B7280', marginTop: '3rem', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               
               Click on <MessageSquarePlus size={24} color={'#6B7280'} style={{ padding: '0px 4px' }} /> to start a new conversation!
             </IonLabel>
