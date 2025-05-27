@@ -17,7 +17,7 @@ import {
 import { arrowBackOutline, sendOutline } from 'ionicons/icons';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
-import { collection, query, where, orderBy, getDocs, doc, getDoc, or, QueryConstraint } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, doc, getDoc, or, QueryConstraint, updateDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 interface Message {
@@ -57,6 +57,7 @@ const ChatPage: React.FC = () => {
   const { user, loading } = useAuth();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [sentMessage, setSentMessage] = useState<any | null>(false);
   const [isTyping, setIsTyping] = useState(false);
   const [chatUser, setChatUser] = useState<User | null>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
@@ -80,37 +81,58 @@ const ChatPage: React.FC = () => {
   // Fetch messages between current user and chat partner
   useEffect(() => {
     if (!user?.uid || !id) return;
-    const fetchMessages = async () => {
-      try {
-        // Firestore doesn't support 'or' queries directly, so we fetch both directions and merge
-        const q1 = query(
-          collection(db, 'messages'),
-          where('from_user_id', '==', user.uid),
-          where('to_user_id', '==', id),
-          orderBy('timestamp', 'asc')
-        );
-        const q2 = query(
-          collection(db, 'messages'),
-          where('from_user_id', '==', id),
-          where('to_user_id', '==', user.uid),
-          orderBy('timestamp', 'asc')
-        );
-        const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
-        const fetchedMessages: Message[] = [];
-        snap1.forEach((doc) => {
-          fetchedMessages.push({ id: doc.id, ...doc.data() } as Message);
-        });
-        snap2.forEach((doc) => {
-          fetchedMessages.push({ id: doc.id, ...doc.data() } as Message);
-        });
-        // Sort all messages by timestamp
-        fetchedMessages.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
-        setMessages(fetchedMessages);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
+
+    // Query for messages sent by current user to chat partner
+    const q1 = query(
+      collection(db, 'messages'),
+      where('from_user_id', '==', user.uid),
+      where('to_user_id', '==', id),
+      orderBy('timestamp', 'asc')
+    );
+    // Query for messages sent by chat partner to current user
+    const q2 = query(
+      collection(db, 'messages'),
+      where('from_user_id', '==', id),
+      where('to_user_id', '==', user.uid),
+      orderBy('timestamp', 'asc')
+    );
+
+    // Listen for realtime updates
+    const unsub1 = onSnapshot(q1, (snap1) => {
+      const msgs1 = snap1.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
+      setMessages(prev => {
+        // Combine with messages from q2 (if already set)
+        const prevQ2 = prev.filter(m => m.from_user_id === id && m.to_user_id === user.uid);
+        const all = [...msgs1, ...prevQ2];
+        all.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
+        return all;
+      });
+    });
+
+    const unsub2 = onSnapshot(q2, async (snap2) => {
+      const msgs2 = snap2.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
+      setMessages(prev => {
+        // Combine with messages from q1 (if already set)
+        const prevQ1 = prev.filter(m => m.from_user_id === user.uid && m.to_user_id === id);
+        const all = [...prevQ1, ...msgs2];
+        all.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
+        return all;
+      });
+
+      // --- Mark unread messages as read ---
+      const unreadMessages = snap2.docs.filter(
+        doc => doc.data().to_user_id === user.uid && doc.data().unread === true
+      );
+      for (const msgDoc of unreadMessages) {
+        await updateDoc(msgDoc.ref, { unread: false });
       }
+      // --- End mark as read ---
+    });
+
+    return () => {
+      unsub1();
+      unsub2();
     };
-    fetchMessages();
   }, [user?.uid, id]);
 
   // Typing indicator simulation (optional)
@@ -128,13 +150,24 @@ const ChatPage: React.FC = () => {
     };
   }, [id]);
 
+  // Scroll to bottom when messages change
+    useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom('smooth');
+    }
+  }, [messages]);
+
+  // Function to scroll to the bottom of the chat content
   const scrollToBottom = (behavior: 'smooth' | 'auto' = 'smooth') => {
     contentRef.current?.scrollToBottom(behavior === 'smooth' ? 300 : 0);
   };
 
+  // Handle sending a new message
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim() === '' || !user?.uid || !id) return;
+
+    setSentMessage(true);
 
     const newMessage: Message = {
       id: `${Date.now()}`,
@@ -149,7 +182,8 @@ const ChatPage: React.FC = () => {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/message`, newMessage, {
         headers: { "Content-Type": "application/json" },
       });
-      setMessages(prevMessages => [...prevMessages, newMessage]);
+      // setMessages(prevMessages => [...prevMessages, newMessage]);
+      setSentMessage(false);
       setMessage('');
       setTimeout(() => scrollToBottom('smooth'), 100);
     } catch (error) {
@@ -323,7 +357,7 @@ const ChatPage: React.FC = () => {
                 type="submit"
                 shape="round"
                 color="primary"
-                disabled={!message.trim()}
+                disabled={!message.trim() || sentMessage}
               >
                 <IonIcon color='light' icon={sendOutline} slot='icon-only' />
               </IonButton>

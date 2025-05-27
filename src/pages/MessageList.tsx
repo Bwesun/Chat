@@ -149,7 +149,7 @@ const MessageList: React.FC = () => {
         // Sort by last message time (descending)
         chatList.sort((a, b) => (b.time > a.time ? 1 : -1));
         setChats(chatList);
-        console.log('Fetched chats:', chatList);
+        // console.log('Fetched chats:', chatList);
       } catch (err) {
         setChats([]);
         alert('Failed to fetch chats. Please try again later.');
