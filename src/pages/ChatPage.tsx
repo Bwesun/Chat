@@ -309,7 +309,7 @@ const ChatPage: React.FC = () => {
               type="text"
               placeholder="Type a message"
               value={message}
-              onIonChange={(e) => setMessage(e.detail.value!)}
+              onIonInput={(e) => setMessage(e.detail.value! ?? '')}
               style={{
                 '--padding-start': '1rem',
                 '--padding-end': '1rem',

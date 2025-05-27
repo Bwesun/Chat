@@ -115,7 +115,7 @@ const Register: React.FC = () => {
               type="text"
               placeholder="Surname"
               value={surname}
-              onIonChange={e => setSurname(e.detail.value!)}
+              onIonInput={e => setSurname(e.detail.value! ?? '')}
               disabled={loading}
               required
               autoFocus
@@ -129,7 +129,7 @@ const Register: React.FC = () => {
               type="text"
               placeholder="Firstname"
               value={firstname}
-              onIonChange={e => setFirstname(e.detail.value!)}
+              onIonInput={e => setFirstname(e.detail.value! ?? '')}
               disabled={loading}
               required
             />
@@ -143,7 +143,7 @@ const Register: React.FC = () => {
               type="tel"
               placeholder="Phone Number"
               value={phone}
-              onIonChange={e => setPhone(e.detail.value!)}
+              onIonInput={e => setPhone(e.detail.value! ?? '')}
               disabled={loading}
               required
             />
@@ -156,7 +156,7 @@ const Register: React.FC = () => {
               type="email"
               placeholder="Email"
               value={email}
-              onIonChange={e => setEmail(e.detail.value!)}
+              onIonInput={e => setEmail(e.detail.value! ?? '')}
               disabled={loading}
               required
             />
@@ -169,7 +169,7 @@ const Register: React.FC = () => {
               type={showPass ? "text" : "password"}
               placeholder="Password"
               value={password}
-              onIonChange={e => setPassword(e.detail.value!)}
+              onIonInput={e => setPassword(e.detail.value! ?? '')}
               disabled={loading}
               required
             />

@@ -100,7 +100,7 @@ const Login: React.FC = () => {
               type="email"
               placeholder="Email"
               value={email}
-              onIonChange={e => setEmail(e.detail.value!)}
+              onIonInput={e => setEmail(e.detail.value! ?? '')}
               disabled={loading}
               required
               autoFocus
@@ -114,7 +114,7 @@ const Login: React.FC = () => {
               type={showPass ? "text" : "password"}
               placeholder="Password"
               value={password}
-              onIonChange={e => setPassword(e.detail.value!)}
+              onIonInput={e => setPassword(e.detail.value! ?? '')}
               disabled={loading}
               required
             />
