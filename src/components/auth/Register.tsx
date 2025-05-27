@@ -13,7 +13,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { Link, useHistory } from "react-router-dom";
-import { Mail, Lock, User, Eye, EyeOff, UserPlus } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, UserPlus, Phone } from "lucide-react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig"; // Adjust path if needed
@@ -24,6 +24,7 @@ const Register: React.FC = () => {
   const [surname, setSurname] = useState("");
   const [firstname, setFirstname] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(""); // <-- Add this line
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,7 @@ const Register: React.FC = () => {
     if (!firstname) return "Firstname is required";
     if (!email) return "Email is required";
     if (!/\S+@\S+\.\S+/.test(email)) return "Invalid email address";
+    if (!phone) return "Phone number is required"; // <-- Add this line
     if (!password) return "Password is required";
     if (password.length < 6) return "Password must be at least 6 characters";
     return null;
@@ -59,6 +61,7 @@ const Register: React.FC = () => {
         surname,
         firstname,
         email,
+        phone, // <-- Add this line
         createdAt: new Date().toISOString(),
       });
       console.log(uid)
@@ -77,15 +80,15 @@ const Register: React.FC = () => {
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
-            <IonToolbar color={'light'}>
-                <IonButtons slot="start">
-                  <IonButton fill='clear' onClick={() => history.goBack()} 
-                    className="ion-hide-md-up">
-                    <IonIcon color="primary" icon={arrowBackOutline} slot='icon-only' />
-                  </IonButton>
-                </IonButtons>
-            </IonToolbar>
-          </IonHeader>
+        <IonToolbar color={'light'}>
+          <IonButtons slot="start">
+            <IonButton fill='clear' onClick={() => history.goBack()} 
+              className="ion-hide-md-up">
+              <IonIcon color="primary" icon={arrowBackOutline} slot='icon-only' />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       <IonContent fullscreen className="ion-padding" style={{
         display: "flex",
         alignItems: "center",
@@ -127,6 +130,20 @@ const Register: React.FC = () => {
               placeholder="Firstname"
               value={firstname}
               onIonChange={e => setFirstname(e.detail.value!)}
+              disabled={loading}
+              required
+            />
+          </IonItem>
+          {/* Phone Number Field */}
+          <IonItem color={"light"} className="ion-margin-bottom" style={{ borderRadius: 8, marginBottom: 16 }}>
+            <span slot="start" style={{ marginRight: 8 }}>
+              <Phone size={18} className="primary-color" />
+            </span>
+            <IonInput
+              type="tel"
+              placeholder="Phone Number"
+              value={phone}
+              onIonChange={e => setPhone(e.detail.value!)}
               disabled={loading}
               required
             />
@@ -179,13 +196,13 @@ const Register: React.FC = () => {
           </IonButton>
 
           <div style={{ textAlign: "center", marginTop: 24 }}>
-                      <IonText color={"dark"}>
-                        Already have an account?{" "}
-                        <Link color={"secondary"} to="/login" style={{ padding: 0, textDecoration: 'none' }}>
-                           Log in
-                        </Link>
-                      </IonText>
-                    </div>
+            <IonText color={"dark"}>
+              Already have an account?{" "}
+              <Link color={"secondary"} to="/login" style={{ padding: 0, textDecoration: 'none' }}>
+                Log in
+              </Link>
+            </IonText>
+          </div>
         </form>
       </IonContent>
     </IonPage>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   IonPage,
   IonHeader,
@@ -60,18 +60,15 @@ const ChatPage: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [chatUser, setChatUser] = useState<User | null>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
+  const history = useHistory();
 
   // Fetch chat partner user from Firestore
   useEffect(() => {
     const fetchUser = async () => {
       if (!id) return;
       try {
-        const userDoc = await getDoc(doc(db, "users", id));
-        if (userDoc.exists()) {
-          setChatUser({ id: userDoc.id, ...userDoc.data() } as User);
-        } else {
-          setChatUser(null);
-        }
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/${id}`);
+        setChatUser(res.data);
       } catch (error) {
         console.error("Error fetching user:", error);
         setChatUser(null);
@@ -170,15 +167,15 @@ const ChatPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton fill='clear' className="ion-hide-md-up" onClick={() => history.back()}>
+            <IonButton fill='clear' className="ion-hide-md-up" onClick={() => window.history.back()}>
               <IonIcon icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>
-          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '0.5rem' }}>
-            <IonAvatar style={{ height: '40px', width: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '0.5rem' }} onClick={() => chatUser && history.push(`/viewprofile/${chatUser.id}`)}>
+            <IonAvatar style={{ height: '40px', width: '40px' }} >
               <img
-                src={chatUser?.avatar || ''}
-                alt={chatUser?.name ? `${chatUser.name}'s avatar` : 'Avatar'}
+                src={import.meta.env.VITE_AVATAR_URL || ''}
+                alt={chatUser?.firstname + ' ' + chatUser?.surname ? `${chatUser?.firstname}'s avatar` : 'Avatar'}
                 style={{ objectFit: 'cover', borderRadius: '50%' }}
               />
             </IonAvatar>
@@ -228,8 +225,8 @@ const ChatPage: React.FC = () => {
                     {!isCurrentUser && (
                       <IonAvatar style={{ height: '32px', width: '32px', marginRight: '0.5rem', marginBottom: '0.25rem' }}>
                         <img
-                          src={chatUser?.avatar || ''}
-                          alt={chatUser?.name ? `${chatUser.name}'s avatar` : 'Avatar'}
+                          src={import.meta.env.VITE_AVATAR_URL || ''}
+                          alt={chatUser?.firstname + ' ' + chatUser?.surname ? `${chatUser?.firstname}'s avatar` : 'Avatar'}
                           style={{ objectFit: 'cover', borderRadius: '50%' }}
                         />
                       </IonAvatar>
