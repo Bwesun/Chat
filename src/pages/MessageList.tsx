@@ -16,8 +16,9 @@ import {
   IonIcon,
   IonText,
   IonSpinner,
+  IonButton,
 } from '@ionic/react';
-import { MessageSquarePlus } from 'lucide-react';
+import { LogOut, MessageSquarePlus } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebaseConfig';
 import {
@@ -31,6 +32,8 @@ import {
   limit,
   onSnapshot,
 } from 'firebase/firestore';
+import { logOutOutline, personOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
 
 interface Chat {
   id: string;
@@ -47,6 +50,7 @@ const MessageList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [chats, setChats] = useState<Chat[]>([]);
   const [loadingChats, setLoadingChats] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -174,7 +178,15 @@ const MessageList: React.FC = () => {
     <IonPage>
       <IonHeader translucent={true} className="ion-no-border">
         <IonToolbar color={'light'}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
           <IonTitle color={'primary'}>Messages</IonTitle>
+          <IonButton color={'primary'} onClick={() => {
+            history.push('/profile');
+          }
+          } shape='round' className="">
+            <IonIcon slot='icon-only' color='light' icon={personOutline} />
+          </IonButton>
+          </div>
         </IonToolbar>
       </IonHeader>
 
@@ -183,7 +195,7 @@ const MessageList: React.FC = () => {
           className='search-bar'
           value={searchQuery}
           color={'primary'}
-          onIonChange={(e) => setSearchQuery(e.detail.value!)}
+          onIonInput={e => setSearchQuery(e.detail.value! ?? '')}
           placeholder="Search chats"
           style={{
             '--placeholder-color': '--ion-color-light',

@@ -25,8 +25,10 @@ interface Contact {
   id: string;
   firstname: string;
   surname: string;
+  name: string; // Combined name for display
   email: string;
-  avatar: string;
+  phone: string | null;
+
 }
 
 const NewChat: React.FC = () => {
@@ -43,9 +45,8 @@ const NewChat: React.FC = () => {
         // Fetch contacts from backend
         const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/contacts/${user.uid}`);
         setContacts(res.data);
-        console.log('Contacts fetched:', contacts);
       } catch (error) {
-        console.error('Error fetching contacts:', error);
+        // console.error('Error fetching contacts:', error);
         setContacts([]);
       }
       setLoading(false);
@@ -53,10 +54,14 @@ const NewChat: React.FC = () => {
     fetchContacts();
   }, [user?.uid]);
 
-  const filteredContacts = contacts.filter(contact =>
-    (contact.firstname + ' ' + contact.surname).toLowerCase().includes(searchQuery.toLowerCase()) ||
-    contact.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredContacts = contacts.filter(contact => {
+    const search = searchQuery.trim().toLowerCase();
+    return (
+      contact.name.toLowerCase().includes(search) ||
+      contact.email.toLowerCase().includes(search) ||
+      (contact.phone && contact.phone.toLowerCase().includes(search))
+    );
+  });
 
   return (
     <IonPage>
@@ -76,7 +81,7 @@ const NewChat: React.FC = () => {
           className='search-bar'
           value={searchQuery}
           color={'primary'}
-          onIonChange={(e) => setSearchQuery(e.detail.value!)}
+          onIonInput={e => setSearchQuery(e.detail.value! ?? '')}
           placeholder="Search contact"
           style={{
             '--placeholder-color': '--ion-color-light',
@@ -108,13 +113,13 @@ const NewChat: React.FC = () => {
               style={{ '--padding-start': '16px', '--inner-padding-end': '16px' }}
             >
               <IonAvatar slot="start" style={{ width: '48px', height: '48px' }}>
-                <img src={contact.avatar} alt={`${contact.firstname} ${contact.surname}'s avatar`} style={{ objectFit: 'cover', borderRadius: '50%' }} />
+                <img src={import.meta.env.VITE_AVATAR_URL || ''} alt={`${contact.firstname} ${contact.surname}'s avatar`} style={{ objectFit: 'cover', borderRadius: '50%' }} />
               </IonAvatar>
               <IonLabel style={{ marginLeft: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                   <div>
                     <h2 style={{ fontSize: '0.875rem', fontWeight: 500, color: '#111827' }}>
-                      {contact.firstname} {contact.surname}
+                      {contact.name}
                     </h2>
                     <p style={{ fontSize: '0.75rem', color: '#6B7280' }}>
                       {contact.email}

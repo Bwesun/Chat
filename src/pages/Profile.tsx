@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
               <IonIcon color="light" icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>
-          <IonTitle color={"light"} style={{ fontWeight: 500 }}>{profile.firstname + ' ' + profile.surname}</IonTitle>
+          <IonTitle color={"light"} style={{ fontWeight: 500 }}>{profile.firstname + ' ' + profile.surname} (You)</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" style={{ "--background": "#F9FAFB" }}>
