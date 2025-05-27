@@ -29,6 +29,7 @@ import {
   doc,
   getDoc,
   limit,
+  onSnapshot,
 } from 'firebase/firestore';
 
 interface Chat {
@@ -50,30 +51,34 @@ const MessageList: React.FC = () => {
   useEffect(() => {
     if (!user?.uid) return;
 
-    const fetchChats = async () => {
-      setLoadingChats(true);
+    // Listen for changes in both sent and received messages
+    const messagesRef = collection(db, 'messages');
+    const qSent = query(messagesRef, where('from_user_id', '==', user.uid));
+    const qReceived = query(messagesRef, where('to_user_id', '==', user.uid));
+
+    // Store unsubscribe functions
+    let unsubSent: (() => void) | null = null;
+    let unsubReceived: (() => void) | null = null;
+
+    setLoadingChats(true);
+
+    // Helper to update chats when messages change
+    const updateChats = async () => {
       try {
         // Fetch all messages where the user is either sender or receiver
-        const messagesRef = collection(db, 'messages');
-        const q = query(
-          messagesRef,
-          where('from_user_id', '==', user.uid)
-        );
-        const q2 = query(
-          messagesRef,
-          where('to_user_id', '==', user.uid)
-        );
-        const [sentSnap, receivedSnap] = await Promise.all([getDocs(q), getDocs(q2)]);
+        const [sentSnap, receivedSnap] = await Promise.all([
+          getDocs(qSent),
+          getDocs(qReceived)
+        ]);
 
         // Collect unique chat partner IDs
         const chatPartnerIds = new Set<string>();
         sentSnap.forEach(doc => chatPartnerIds.add(doc.data().to_user_id));
         receivedSnap.forEach(doc => chatPartnerIds.add(doc.data().from_user_id));
-        chatPartnerIds.delete(user.uid); // Remove self if present
+        chatPartnerIds.delete(user.uid);
 
         // For each partner, fetch user info and latest message
         const chatPromises = Array.from(chatPartnerIds).map(async (partnerId) => {
-          // Fetch user info
           const userDoc = await getDoc(doc(db, 'users', partnerId));
           const userData = userDoc.exists() ? userDoc.data() : { name: 'Unknown', avatar: '' };
 
@@ -95,7 +100,6 @@ const MessageList: React.FC = () => {
           );
           const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
 
-          // Find the latest message among both directions
           let lastMsgDoc = null;
           if (!snap1.empty && !snap2.empty) {
             lastMsgDoc =
@@ -108,7 +112,6 @@ const MessageList: React.FC = () => {
             lastMsgDoc = snap2.docs[0];
           }
 
-          // If there is no message, skip this user
           if (!lastMsgDoc) return null;
 
           const msg = lastMsgDoc.data();
@@ -151,7 +154,16 @@ const MessageList: React.FC = () => {
       setLoadingChats(false);
     };
 
-    fetchChats();
+    unsubSent = onSnapshot(qSent, updateChats);
+    unsubReceived = onSnapshot(qReceived, updateChats);
+
+    // Initial fetch
+    updateChats();
+
+    return () => {
+      unsubSent && unsubSent();
+      unsubReceived && unsubReceived();
+    };
   }, [user?.uid]);
 
   const filteredChats = chats.filter((chat) =>
@@ -205,7 +217,7 @@ const MessageList: React.FC = () => {
             >
               <div slot="start" style={{ position: 'relative' }}>
                 <IonAvatar style={{ width: '48px', height: '48px' }}>
-                  <img src={chat.avatar} alt={`${chat.name}'s avatar`} style={{ objectFit: 'cover', borderRadius: '50%' }} />
+                  <img src={import.meta.env.VITE_AVATAR_URL || ''} alt={`${chat.name}'s avatar`} style={{ objectFit: 'cover', borderRadius: '50%' }} />
                 </IonAvatar>
                 {chat.online && (
                   <span
