@@ -24,6 +24,7 @@
     "@capacitor/keyboard": "latest",
     "@capacitor/network": "^7.0.1",
     "@capacitor/status-bar": "latest",
+    "@ionic/pwa-elements": "^3.3.0",
     "@ionic/react": "^8.5.0",
     "@ionic/react-router": "^8.5.0",
     "@types/react-router": "^5.1.20",
