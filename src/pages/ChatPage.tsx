@@ -202,7 +202,7 @@ const ChatPage: React.FC = () => {
         <IonToolbar>
           <IonButtons slot="start">
             <IonButton fill='clear' className="ion-hide-md-up" onClick={() => window.history.back()}>
-              <IonIcon icon={arrowBackOutline} slot='icon-only' />
+              <IonIcon color='light' icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>
           <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '0.5rem' }} onClick={() => chatUser && history.push(`/viewprofile/${chatUser.id}`)}>
@@ -230,7 +230,7 @@ const ChatPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent ref={contentRef} scrollEvents={true} style={{ '--background': 'var(--ion-color-light)' }} className="ion-padding-horizontal">
+      <IonContent ref={contentRef} scrollEvents={true} style={{ '--background': 'var(--ion-color-light)' }}className="ion-padding-horizontal">
         {Object.entries(groupedMessages).map(([date, dateMessages]) => (
           <div key={date} style={{ marginBottom: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
