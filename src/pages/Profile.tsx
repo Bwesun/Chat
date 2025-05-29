@@ -16,7 +16,7 @@ import {
   IonButtons,
   IonSpinner,
 } from "@ionic/react";
-import { LogOut, Edit, User, Mail, Phone, Settings, UserIcon } from "lucide-react";
+import { LogOut, Edit, User, Mail, Phone, Settings, UserIcon, Camera } from "lucide-react";
 import { arrowBackOutline, callOutline, filmOutline, mailOutline, personOutline } from "ionicons/icons";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -39,6 +39,12 @@ const Profile: React.FC = () => {
     };
     fetchProfile();
   }, [user?.uid]);
+
+  // Handler for editing/changing profile photo
+  const handleEditPhoto = () => {
+    // You can open a modal, file picker, or camera here
+    alert("Edit profile photo clicked!");
+  };
 
   if (loading) {
     return (
@@ -84,7 +90,9 @@ const Profile: React.FC = () => {
               <IonIcon color="light" icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>
-          <IonTitle color={"light"} style={{ fontWeight: 500 }}>{profile.firstname + ' ' + profile.surname} (You)</IonTitle>
+          <IonTitle color={"light"} style={{ fontWeight: 500 }}>
+            {profile.firstname + ' ' + profile.surname} (You)
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" style={{ "--background": "#F9FAFB" }}>
@@ -95,9 +103,38 @@ const Profile: React.FC = () => {
           marginTop: 32,
           marginBottom: 24,
         }}>
-          <IonAvatar style={{ width: 96, height: 96, marginBottom: 16 }}>
-            <img src={import.meta.env.VITE_AVATAR_URL} alt={profile.firstname + profile.surname || profile.firstname} style={{ objectFit: "cover", borderRadius: "50%" }} />
-          </IonAvatar>
+          <div style={{ position: "relative", width: 96, height: 96, marginBottom: 16 }}>
+            <IonAvatar style={{ width: 96, height: 96 }}>
+              <img
+                src={import.meta.env.VITE_AVATAR_URL}
+                alt={profile.firstname + profile.surname || profile.firstname}
+                style={{ objectFit: "cover", borderRadius: "50%", width: "100%", height: "100%" }}
+              />
+            </IonAvatar>
+            {/* Edit icon overlay */}
+            <button
+              onClick={handleEditPhoto}
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                background: "#fff",
+                border: "none",
+                borderRadius: "50%",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
+                width: 32,
+                height: 32,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                padding: 0,
+              }}
+              aria-label="Edit profile photo"
+            >
+              <Camera size={18} color="#721ab1" />
+            </button>
+          </div>
           <h2 style={{ fontWeight: 700, fontSize: 24, color: "#1E293B", margin: 0 }}>
             {profile.name || `${profile.firstname} ${profile.surname}`}
           </h2>
