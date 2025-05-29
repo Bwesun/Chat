@@ -5,29 +5,27 @@ import { auth } from '../../firebaseConfig';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AuthGate: React.FC = () => {
-  const {user, loading} = useAuth();
+  const { user, loading } = useAuth();
   const history = useHistory();
   const location = useLocation();
   const locationPath = location.pathname;
 
-  // REDIRECTS FOR LOGGED IN USERS AND LOGGED OUT USERS
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if(!loading){
+      if (!loading) {
         if (user) {
-          if(locationPath === '/welcome' || '/login' || '/register'){
-            // alert('You are already logged in!');
-            // console.log(user);
+          const guestRoutes = ['/welcome', '/login', '/register'];
+          if (guestRoutes.includes(locationPath)) {
             history.push('/messages');
           }
-        }  else {
+        } else {
           history.push('/welcome');
-        } 
+        }
       }
     });
 
     return () => unsub();
-  }, [user, loading, history]);
+  }, [user, loading, history, locationPath]);
 
   return null;
 };
