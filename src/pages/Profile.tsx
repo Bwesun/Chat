@@ -15,15 +15,24 @@ import {
   IonText,
   IonButtons,
   IonSpinner,
+  IonModal,
+  IonImg,
 } from "@ionic/react";
-import { LogOut, Edit, User, Mail, Phone, Settings, UserIcon, Camera } from "lucide-react";
-import { arrowBackOutline, callOutline, filmOutline, mailOutline, personOutline } from "ionicons/icons";
+import { LogOut, Edit, User, Mail, Phone, Settings } from "lucide-react";
+import { arrowBackOutline, callOutline, mailOutline, personOutline, cameraOutline, closeOutline } from "ionicons/icons";
 import { useAuth } from "../contexts/AuthContext";
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
 
 const Profile: React.FC = () => {
-  const { user } = useAuth(); // Make sure your auth context provides user.uid
+  const { user } = useAuth();
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [currentPhoto, setCurrentPhoto] = useState<string | null>(null)
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [photoAlert, setPhotoAlert ] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -37,14 +46,59 @@ const Profile: React.FC = () => {
       }
       setLoading(false);
     };
+
     fetchProfile();
   }, [user?.uid]);
 
-  // Handler for editing/changing profile photo
+  useEffect(() => {
+    if (user?.uid) return;
+
+    const loadPhoto = async () => {
+      const fileName = `photo_${user?.uid}.jpeg`;
+      try {
+        const file = await Filesystem.readFile({
+          path: fileName,
+          directory: Directory.Data,
+        });
+        setCurrentPhoto(`data:image/jpeg;base64,${file.data}`);
+      } catch (err) {
+        setPhotoAlert('Failed to load photo!');
+      }
+    };
+
+
+    loadPhoto();
+  }, [user?.uid]);
+
   const handleEditPhoto = () => {
-    // You can open a modal, file picker, or camera here
-    alert("Edit profile photo clicked!");
+    setShowModal(true);
   };
+
+    // Take Picture and save
+  const takePicture = async () => {
+      try {
+        const image = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.Base64,
+          source: CameraSource.Camera,
+        });
+  
+        // Save to filesystem
+        const fileName = `photo_${user?.uid}.jpeg`;
+        await Filesystem.writeFile({
+          path: fileName,
+          data: image.base64String!,
+          directory: Directory.Data,
+        });
+  
+        setPhoto(`data:image/jpeg;base64,${image.base64String}`);
+        setCurrentPhoto(`data:image/jpeg;base64,${image.base64String}`);
+        alert('Photo saved to device!');
+      } catch (err) {
+        alert('Failed to take photo: ' + err);
+      }
+    };
 
   if (loading) {
     return (
@@ -106,13 +160,15 @@ const Profile: React.FC = () => {
           <div style={{ position: "relative", width: 96, height: 96, marginBottom: 16 }}>
             <IonAvatar style={{ width: 96, height: 96 }}>
               <img
-                src={import.meta.env.VITE_AVATAR_URL}
+                src={currentPhoto || import.meta.env.VITE_AVATAR_URL}
                 alt={profile.firstname + profile.surname || profile.firstname}
                 style={{ objectFit: "cover", borderRadius: "50%", width: "100%", height: "100%" }}
               />
             </IonAvatar>
             {/* Edit icon overlay */}
-            <button
+            <IonButton
+              fill="clear"
+              size="small"
               onClick={handleEditPhoto}
               style={{
                 position: "absolute",
@@ -123,7 +179,7 @@ const Profile: React.FC = () => {
                 borderRadius: "50%",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
                 width: 32,
-                height: 32,
+                height: 32, 
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -132,8 +188,8 @@ const Profile: React.FC = () => {
               }}
               aria-label="Edit profile photo"
             >
-              <Camera size={18} color="#721ab1" />
-            </button>
+              <IonIcon color="primary" slot="icon-only" size="small" icon={cameraOutline} />
+            </IonButton>
           </div>
           <h2 style={{ fontWeight: 700, fontSize: 24, color: "#1E293B", margin: 0 }}>
             {profile.name || `${profile.firstname} ${profile.surname}`}
@@ -154,6 +210,42 @@ const Profile: React.FC = () => {
             Edit Profile
           </IonButton>
         </div>
+
+        {/* Modal for editing profile photo */}
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle color={"light"}>Edit Profile Photo</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={() => setShowModal(false)}><IonIcon color="light" icon={closeOutline} slot={'icon-only'}/></IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <div style={{
+              display: "flex", justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
+            }}>
+                {photo && (
+                  <IonAvatar style={{ width: '15rem', height: '15rem' }}>
+                      <img
+                        src={photo}
+                        alt={profile.firstname + profile.surname || profile.firstname}
+                        style={{ objectFit: "cover", borderRadius: "50%", width: "100%", height: "100%" }}
+              />
+            </IonAvatar>
+                    ) || (
+                      <IonAvatar style={{ width: '15rem', height: '15rem' }}>
+                      <img
+                        src={import.meta.env.VITE_AVATAR_URL}
+                        alt={profile.firstname + profile.surname || profile.firstname}
+                        style={{ objectFit: "cover", borderRadius: "50%", width: "100%", height: "100%" }}
+              />
+            </IonAvatar>
+                    )}
+                    <IonButton shape="round" onClick={takePicture}> <IonIcon icon={cameraOutline} slot="start" /> Change Picture</IonButton>
+            </div>
+          </IonContent>
+        </IonModal>
 
         <IonList lines="none" style={{ background: "transparent" }}>
           <IonItem>

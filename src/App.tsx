@@ -56,7 +56,6 @@ import { useEffect } from 'react';
 import Logout from './components/auth/Logout';
 import NetworkCheck from './components/NetworkCheck';
 import { AuthProvider } from './contexts/AuthContext';
-import Test from './pages/Test';
 
 setupIonicReact();
 
@@ -102,7 +101,7 @@ const App: React.FC = () => {
         </Route>
 
         {/* Routes WITH tabs */}
-        <Route path={["/contacts", "/messages", "/profile", "/viewprofile/:id", "/test"]}>
+        <Route path={["/contacts", "/messages", "/profile", "/viewprofile/:id"]}>
           <IonTabs>
             <IonRouterOutlet>
               <Route exact path="/contacts">
@@ -116,9 +115,6 @@ const App: React.FC = () => {
               </Route>
               <Route exact path="/viewprofile/:id">
                 <ViewProfile />
-              </Route>
-              <Route exact path="/test">
-                <Test /> 
               </Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
