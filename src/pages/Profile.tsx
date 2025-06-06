@@ -107,7 +107,7 @@ const Profile: React.FC = () => {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Profile</IonTitle>
+            <IonTitle color={"light"}>Profile</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
