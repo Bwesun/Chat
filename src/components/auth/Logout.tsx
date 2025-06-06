@@ -14,7 +14,7 @@ const Logout: React.FC = () => {
     const handleLogout = async () => {
       try {
         await signOut(auth);
-        console.log(auth);
+        // console.log(auth);
           history.replace("/welcome"); // Safe redirect
       } catch (error) {
         console.error("Logout Error:", error);
