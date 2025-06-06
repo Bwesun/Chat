@@ -23,6 +23,7 @@ import { arrowBackOutline, callOutline, mailOutline, personOutline, cameraOutlin
 import { useAuth } from "../contexts/AuthContext";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { useHistory } from "react-router-dom";
 
 
 const Profile: React.FC = () => {
@@ -33,6 +34,7 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [photoAlert, setPhotoAlert ] = useState<string | null>(null);
+  const history = useHistory();
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -93,7 +95,8 @@ const Profile: React.FC = () => {
   
         setPhoto(`data:image/jpeg;base64,${image.base64String}`);
         setCurrentPhoto(`data:image/jpeg;base64,${image.base64String}`);
-        alert('Photo saved to device!');
+        // alert('Photo saved to device!');
+        history.push('/profile')
       } catch (err) {
         alert('Failed to take photo: ' + err);
       }
@@ -139,7 +142,7 @@ const Profile: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton fill='clear' className="ion-hide-md-up" onClick={() => history.back()}>
+            <IonButton fill='clear' className="ion-hide-md-up" onClick={() => window.history.back()}>
               <IonIcon color="light" icon={arrowBackOutline} slot='icon-only' />
             </IonButton>
           </IonButtons>
