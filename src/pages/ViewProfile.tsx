@@ -48,7 +48,7 @@ const ViewProfile: React.FC = () => {
             <IonButton fill='clear'
               onClick={() => window.history.back()}
               className="ion-hide-md-up">
-              <IonIcon icon={arrowBackOutline} slot='icon-only' />
+              <IonIcon icon={arrowBackOutline} slot='icon-only' color="light" />
             </IonButton>
           </IonButtons>
           <IonTitle color={"light"} style={{ fontWeight: 500 }}>{user?.firstname + ' ' + user?.surname || ''} Profile</IonTitle>
