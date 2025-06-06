@@ -81,7 +81,6 @@ const Profile: React.FC = () => {
           quality: 90,
           allowEditing: false,
           resultType: CameraResultType.Base64,
-          source: CameraSource.Camera,
         });
   
         // Save to filesystem
