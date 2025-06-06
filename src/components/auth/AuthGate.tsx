@@ -13,13 +13,17 @@ const AuthGate: React.FC = () => {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (!loading) {
+        const guestRoutes = ['/welcome', '/login', '/register'];
         if (user) {
-          const guestRoutes = ['/welcome', '/login', '/register'];
           if (guestRoutes.includes(locationPath)) {
+            // console.log('User is authenticated, redirecting to messages');
             history.push('/messages');
-          }
+          } 
         } else {
-          history.push('/welcome');
+          if (!guestRoutes.includes(locationPath)) {
+            // console.log('User is not authenticated, redirecting to welcome');
+            history.push('/welcome');
+          }
         }
       }
     });
