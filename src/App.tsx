@@ -41,7 +41,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { Ellipsis, MessageSquarePlus, MessageSquareText, User, Users } from 'lucide-react';
+import { Ellipsis, LocateIcon, MessageSquarePlus, MessageSquareText, User, Users } from 'lucide-react';
 import AuthGate from './components/auth/AuthGate';
 import Welcome from './pages/Welcome';
 import Login from './components/auth/Login';
@@ -56,6 +56,7 @@ import { useEffect } from 'react';
 import Logout from './components/auth/Logout';
 import NetworkCheck from './components/NetworkCheck';
 import { AuthProvider } from './contexts/AuthContext';
+import CurrentLocation from './components/CurrentLocation';
 
 setupIonicReact();
 
@@ -80,13 +81,14 @@ const App: React.FC = () => {
     <IonReactRouter>
       <AuthGate />
       <NetworkCheck />
-      <IonRouterOutlet>
         {/* Routes WITHOUT tabs */}
         <Route exact path="/welcome" component={Welcome} />
 
         <Route exact path="/register" component={Register} />
 
         <Route exact path="/login" component={Login} />
+
+        <Route exact path="/location" component={CurrentLocation} />
 
         <Route exact path="/logout" component={Logout} />
 
@@ -133,7 +135,6 @@ const App: React.FC = () => {
             </IonTabBar>
           </IonTabs>
         </Route>
-      </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
     </AuthProvider>

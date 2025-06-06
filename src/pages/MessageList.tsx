@@ -18,7 +18,7 @@ import {
   IonSpinner,
   IonButton,
 } from '@ionic/react';
-import { LogOut, MessageSquarePlus } from 'lucide-react';
+import { Locate, LogOut, MessageSquarePlus } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebaseConfig';
 import {
@@ -297,6 +297,9 @@ const MessageList: React.FC = () => {
         <IonFab slot='fixed' vertical='bottom' horizontal='end'>
           <IonFabButton routerLink='/newchat'>
             <MessageSquarePlus size={24} color={'white'} />
+          </IonFabButton>
+          <IonFabButton routerLink='/location'>
+            <Locate />
           </IonFabButton>
         </IonFab>
       </IonContent>
