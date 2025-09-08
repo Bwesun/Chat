@@ -19,6 +19,7 @@ import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, where, orderBy, getDocs, doc, getDoc, or, QueryConstraint, updateDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import CryptoJS from 'crypto-js';
 
 interface Message {
   id: string;
@@ -63,6 +64,14 @@ const ChatPage: React.FC = () => {
   const contentRef = useRef<HTMLIonContentElement>(null);
   const history = useHistory();
 
+  const SECRET_KEY = import.meta.env.VITE_CRYPT_SECRET_KEY;
+
+  // Function to decrypt message
+  function decryptMessage(encryptedText: string) {
+    const bytes = CryptoJS.AES.decrypt(encryptedText, SECRET_KEY);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
+
   // Fetch chat partner user from Firestore
   useEffect(() => {
     const fetchUser = async () => {
@@ -105,7 +114,11 @@ const ChatPage: React.FC = () => {
         const prevQ2 = prev.filter(m => m.from_user_id === id && m.to_user_id === user.uid);
         const all = [...msgs1, ...prevQ2];
         all.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
-        return all;
+        // Decrypt all messages
+        return all.map(msg => ({
+          ...msg,
+          text: decryptMessage(msg.text)
+        }));
       });
     });
 
@@ -116,7 +129,11 @@ const ChatPage: React.FC = () => {
         const prevQ1 = prev.filter(m => m.from_user_id === user.uid && m.to_user_id === id);
         const all = [...prevQ1, ...msgs2];
         all.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
-        return all;
+        // Decrypt all messages
+        return all.map(msg => ({
+          ...msg,
+          text: decryptMessage(msg.text)
+        }));
       });
 
       // --- Mark unread messages as read ---
@@ -133,7 +150,7 @@ const ChatPage: React.FC = () => {
       unsub1();
       unsub2();
     };
-  }, [user?.uid, id]);
+  }, [user?.uid, id, SECRET_KEY]);
 
   // Typing indicator simulation (optional)
   useEffect(() => {
@@ -167,13 +184,20 @@ const ChatPage: React.FC = () => {
     e.preventDefault();
     if (message.trim() === '' || !user?.uid || !id) return;
 
+    const SECRET_KEY = import.meta.env.VITE_CRYPT_SECRET_KEY; // Dont forget to include secret key in your .env file in 256bits/32bytes e.g "fff5a928172bad8d2c7600929d80ad8b6f1fd2d5b5880b8737f08d45b569d4ab"
+
+    // Function to encrypt message
+    function encryptMessage(message: string) {
+      const encrypted = CryptoJS.AES.encrypt(message, SECRET_KEY).toString();
+      return encrypted;
+    }
     setSentMessage(true);
 
     const newMessage: Message = {
       id: `${Date.now()}`,
       to_user_id: id,
       from_user_id: user.uid,
-      text: message,
+      text: encryptMessage(message),
       timestamp: new Date().toISOString(),
       status: 'sent',
     };
@@ -192,7 +216,7 @@ const ChatPage: React.FC = () => {
     }
   };
 
-  // Group messages by date (simplified)
+  // Group messages by date
   const groupedMessages: Record<string, Message[]> = { 'Today': messages };
 
   return (
