@@ -65,7 +65,6 @@ const ChatPage: React.FC = () => {
   const history = useHistory();
 
   const SECRET_KEY = import.meta.env.VITE_CRYPT_SECRET_KEY;
-  console.log(id, user?.uid, SECRET_KEY);
 
   // Function to decrypt message
   function decryptMessage(encryptedText: string) {
