@@ -17,6 +17,7 @@ import {
   IonSpinner,
   IonModal,
   IonImg,
+  IonInput,
 } from "@ionic/react";
 import { LogOut, Edit, User, Mail, Phone, Settings } from "lucide-react";
 import { arrowBackOutline, callOutline, mailOutline, personOutline, cameraOutline, closeOutline } from "ionicons/icons";
@@ -24,6 +25,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 
 const Profile: React.FC = () => {
@@ -33,8 +35,19 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false); // <-- Add this
   const [photoAlert, setPhotoAlert ] = useState<string | null>(null);
   const history = useHistory();
+
+  // Add react-hook-form for edit modal
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      bio: ""
+    }
+  });
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -43,6 +56,13 @@ const Profile: React.FC = () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/${user.uid}`);
         setProfile(res.data);
+        // Set form defaults
+        reset({
+          name: res.data.name || `${res.data.firstname} ${res.data.surname}`,
+          email: res.data.email,
+          phone: res.data.phone,
+          bio: res.data.bio || ""
+        });
       } catch (error) {
         setProfile(null);
       }
@@ -50,7 +70,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, [user?.uid]);
+  }, [user?.uid, reset]);
 
   useEffect(() => {
     if (user?.uid) return;
@@ -101,6 +121,17 @@ const Profile: React.FC = () => {
         alert('Failed to take photo: ' + err);
       }
     };
+
+  // Edit profile submit handler
+  const onEditProfile = async (data: any) => {
+    try {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user/${user?.uid}`, data);
+      setProfile((prev: any) => ({ ...prev, ...data }));
+      setShowEditModal(false);
+    } catch (err) {
+      alert("Failed to update profile.");
+    }
+  };
 
   if (loading) {
     return (
@@ -207,6 +238,7 @@ const Profile: React.FC = () => {
               textTransform: "none",
               fontSize: 14,
             }}
+            onClick={() => setShowEditModal(true)} // <-- Open edit modal
           >
             <Edit size={16} style={{ marginRight: 8 }} />
             Edit Profile
@@ -249,6 +281,68 @@ const Profile: React.FC = () => {
           </IonContent>
         </IonModal>
 
+        {/* Modal for editing profile details */}
+        <IonModal isOpen={showEditModal} onDidDismiss={() => setShowEditModal(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Edit Profile</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={() => setShowEditModal(false)}>
+                  <IonIcon icon={closeOutline} />
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <form onSubmit={handleSubmit(onEditProfile)}>
+              <IonList>
+                <IonItem>
+                  <IonLabel position="stacked">Name</IonLabel>
+                  <IonInput
+                    {...register("name", { required: true })}
+                    defaultValue={profile.name || `${profile.firstname} ${profile.surname}`}
+                  />
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Email</IonLabel>
+                  <IonInput
+                    type="email"
+                    {...register("email", { required: true })}
+                    defaultValue={profile.email}
+                  />
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Phone</IonLabel>
+                  <IonInput
+                    {...register("phone")}
+                    defaultValue={profile.phone}
+                  />
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Bio</IonLabel>
+                  <IonInput
+                    {...register("bio")}
+                    defaultValue={profile.bio}
+                  />
+                </IonItem>
+              </IonList>
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
+                <IonButton
+                  type="button"
+                  color="medium"
+                  onClick={() => setShowEditModal(false)}
+                  style={{ marginRight: 8 }}
+                >
+                  Cancel
+                </IonButton>
+                <IonButton type="submit" color="primary" disabled={isSubmitting}>
+                  {isSubmitting ? <IonSpinner name="dots" /> : "Save"}
+                </IonButton>
+              </div>
+            </form>
+          </IonContent>
+        </IonModal>
+
         <IonList lines="none" style={{ background: "transparent" }}>
           <IonItem>
             <IonIcon icon={personOutline} slot="start" color="dark" />
@@ -273,19 +367,6 @@ const Profile: React.FC = () => {
           </IonItem>
         </IonList>
 
-        <IonButton
-          expand="block"
-          color="primary"
-          style={{
-            borderRadius: 12,
-            fontWeight: 600,
-            fontSize: 16,
-            marginBottom: 12,
-          }}
-        >
-          <Settings size={18} style={{ marginRight: 8 }} />
-          Account Settings
-        </IonButton>
         <IonButton
           expand="block"
           color="danger"
