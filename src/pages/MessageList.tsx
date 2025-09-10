@@ -34,6 +34,7 @@ import {
 } from 'firebase/firestore';
 import { logOutOutline, personOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 interface Chat {
   id: string;
@@ -52,6 +53,14 @@ const MessageList: React.FC = () => {
   const [loadingChats, setLoadingChats] = useState(true);
   const history = useHistory();
 
+  // Decrypting Secret Key
+  const SECRET_KEY = import.meta.env.VITE_CRYPT_SECRET_KEY;
+
+  // Function to decrypt message
+  function decryptMessage(encryptedText: string) {
+    const bytes = CryptoJS.AES.decrypt(encryptedText, SECRET_KEY);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
   useEffect(() => {
     if (!user?.uid) return;
 
@@ -119,7 +128,7 @@ const MessageList: React.FC = () => {
           if (!lastMsgDoc) return null;
 
           const msg = lastMsgDoc.data();
-          const lastMessage = msg.text;
+          const lastMessage = decryptMessage(msg.text);
           const lastTime = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
           // Count unread messages from partner to user
